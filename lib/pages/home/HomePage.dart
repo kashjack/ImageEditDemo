@@ -4,10 +4,11 @@
  * @Author: kashjack
  * @Date: 2022-11-01 09:31:38
  * @LastEditors: kashjack kashjack@163.com
- * @LastEditTime: 2022-11-01 16:52:40
+ * @LastEditTime: 2022-11-01 19:37:34
  */
 
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/helper/config/image.dart';
@@ -100,9 +101,48 @@ class _HomePageState extends BaseWidgetState<HomePage> {
           _load();
         },
         child: ListView.builder(
-          itemCount: _listItems.length,
+          itemCount: 1,
           itemBuilder: (context, index) {
-            return Container();
+            double imageWidth = 158;
+            double itemLeftMargin = 30;
+            double itemTopMargin = 25;
+            Color timeColor = Color(0xFF9E9E9E);
+            return SizedBox(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: itemLeftMargin, top: itemTopMargin),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(7),
+                      child: Image.network(
+                        'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2F3120e892cea133e4c100128dbfd2309417246ff2.jpg&refer=http%3A%2F%2Fi2.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1669893500&t=e695d5a4fcef31988ee8245fb4eb747e',
+                        width: imageWidth,
+                        height: imageWidth,
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: itemLeftMargin,
+                      top: 8,
+                      bottom: 14,
+                    ),
+                    child: Text(
+                      '2022-09-23 11:03   ' +
+                          (Platform.isIOS ? 'iOS' : 'Android'),
+                      style: TextStyle(
+                        color: timeColor,
+                      ),
+                    ),
+                  ),
+                  // Padding(padding:EdgeInsets.only((top:8, bottom: 14),child: Container()),
+                  _buildLine(),
+                ],
+              ),
+            );
           },
         ),
       ),

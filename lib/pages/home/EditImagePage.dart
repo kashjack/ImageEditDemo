@@ -4,14 +4,18 @@
  * @Author: kashjack
  * @Date: 2022-11-01 09:51:38
  * @LastEditors: kashjack kashjack@163.com
- * @LastEditTime: 2022-11-01 17:03:56
+ * @LastEditTime: 2022-11-01 19:15:22
  */
 
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_app/helper/config/config.dart';
 import 'package:flutter_app/helper/config/image.dart';
 import 'package:flutter_app/helper/config/size.dart';
 import 'package:flutter_app/pages/home/EditTextPage.dart';
@@ -33,6 +37,7 @@ class _EditImageState extends BaseWidgetState<EditImagePage> {
   GlobalKey _repaintKey = GlobalKey(); // 可以获取到被截图组件状态的 GlobalKey
   String _editText = '';
   final GlobalKey textKey = GlobalKey();
+  final GlobalKey deleteKey = GlobalKey();
   bool _isShowBottomDel = false;
 
   //静止状态下的offset
@@ -218,6 +223,7 @@ class _EditImageState extends BaseWidgetState<EditImagePage> {
                 alignment: Alignment.bottomCenter,
                 child: Image.asset(
                   JKImage.icon_home_delete,
+                  key: deleteKey,
                   width: 80,
                   height: 80,
                 ),
@@ -275,12 +281,15 @@ class _EditImageState extends BaseWidgetState<EditImagePage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(imageRadius),
-                  border: Border.all(
-                    width: _selectIndex == mode ? 2 : 0,
-                    color: Colors.blue,
-                  )),
+              decoration: _selectIndex == mode
+                  ? BoxDecoration(
+                      borderRadius: BorderRadius.circular(imageRadius),
+                      border: Border.all(
+                        width: 2,
+                        color: Colors.blue,
+                      ),
+                    )
+                  : null,
               child: imageFilter(
                 hue: _filterList[mode][0],
                 brightness: _filterList[mode][1],
@@ -332,7 +341,7 @@ class _EditImageState extends BaseWidgetState<EditImagePage> {
 
   // 可移动的文字
   Widget _buildMoveTextView() {
-    return Center(
+    return Align(
       child: Transform.translate(
         offset: _moveOffset,
         child: GestureDetector(
@@ -349,22 +358,63 @@ class _EditImageState extends BaseWidgetState<EditImagePage> {
           },
           onPanUpdate: (detail) {
             if (_isShowBottomDel) {
-              setState(() {
-                if ((detail.globalPosition - _lastStartOffset).dx > 0 &&
-                    (detail.globalPosition - _lastStartOffset).dy > 0) {
-                  print(
-                      "点的位置----${detail.globalPosition - _lastStartOffset}---屏幕宽---${MediaQuery.of(context).size.width}---控件宽度---${textKey.currentContext?.size?.width}");
-                }
-                _moveOffset =
-                    detail.globalPosition - _lastStartOffset + _idleOffset;
-              });
+              setState(
+                () {
+                  _moveOffset =
+                      detail.globalPosition - _lastStartOffset + _idleOffset;
+                  _moveOffset = Offset(
+                    min(
+                        max(
+                            -((_repaintKey.currentContext?.size?.width ?? 0) -
+                                    (textKey.currentContext?.size?.width ??
+                                        0)) /
+                                2,
+                            _moveOffset.dx),
+                        ((_repaintKey.currentContext?.size?.width ?? 0) -
+                                (textKey.currentContext?.size?.width ?? 0)) /
+                            2),
+                    min(
+                        max(
+                            -((_repaintKey.currentContext?.size?.height ?? 0) -
+                                    (textKey.currentContext?.size?.height ??
+                                        0)) /
+                                2,
+                            _moveOffset.dy),
+                        ((_repaintKey.currentContext?.size?.height ?? 0) -
+                                (textKey.currentContext?.size?.height ?? 0)) /
+                            2),
+                  );
+                },
+              );
             }
           },
           onPanEnd: (detail) {
+            RenderBox? moveBox =
+                textKey.currentContext?.findRenderObject() as RenderBox?;
+            RenderBox? deleteBox =
+                deleteKey.currentContext?.findRenderObject() as RenderBox?;
+            var offset1 = (moveBox?.localToGlobal(Offset(
+                    ((moveBox.size.width) / 2),
+                    ((moveBox.size.height) / 2)))) ??
+                Offset(0, 0);
+            var offset2 = (deleteBox?.localToGlobal(Offset(
+                    ((deleteBox.size.width) / 2),
+                    ((deleteBox.size.height) / 2)))) ??
+                Offset(0, 0);
+            var differX = (offset1.dx - offset2.dx).abs();
+            var differY = (offset1.dy - offset2.dy).abs();
             setState(() {
-              _idleOffset = _moveOffset * 1;
               _isShowBottomDel = false;
+              _idleOffset = _moveOffset * 1;
+              if (differX < 50 && differY < 50) {
+                setState(() {
+                  _editText = '';
+                });
+              }
             });
+            // if (){
+
+            // }
           },
           child: Container(
             // color: Colors.red,
@@ -390,5 +440,22 @@ class _EditImageState extends BaseWidgetState<EditImagePage> {
     );
   }
 
-  _pubish() {}
+//  发布
+  _pubish() async {}
+
+  // 制作图片
+  _capturePng() async {
+    try {
+      RenderRepaintBoundary boundary = _repaintKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
+      // ignore: unused_local_variable
+      var image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      return pngBytes;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
 }
