@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-24 13:32:31
- * @LastEditTime: 2022-11-01 10:45:36
+ * @LastEditTime: 2022-11-01 11:18:13
  * @LastEditors: kashjack kashjack@163.com
  * @Description: In User Settings Edit
  * @FilePath: /CarBlueTooth/lib/main.dart
@@ -15,7 +15,7 @@ import 'pages/home/HomePage.dart';
 
 void main() {
   runApp(MyApp());
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 }
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey();

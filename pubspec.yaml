@@ -60,8 +60,8 @@ dependencies:
   #瀑布流
   flutter_staggered_grid_view:
 
-  #本地存储
-  shared_preferences:
+  #图片选择
+  image_picker:
 
   #版本号
   package_info:
@@ -119,6 +119,7 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
     - assets/home/
+    - assets/common/
 
 
 
