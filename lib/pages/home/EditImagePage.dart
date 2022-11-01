@@ -4,7 +4,7 @@
  * @Author: kashjack
  * @Date: 2022-11-01 09:51:38
  * @LastEditors: kashjack kashjack@163.com
- * @LastEditTime: 2022-11-01 16:35:02
+ * @LastEditTime: 2022-11-01 17:03:56
  */
 
 import 'dart:ffi';
@@ -21,7 +21,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditImagePage extends BaseWidget with WidgetsBindingObserver {
-  final XFile image;
+  final File image;
   EditImagePage(this.image);
 
   @override
@@ -332,53 +332,57 @@ class _EditImageState extends BaseWidgetState<EditImagePage> {
 
   // 可移动的文字
   Widget _buildMoveTextView() {
-    return Transform.translate(
-      offset: _moveOffset,
-      child: GestureDetector(
-        onLongPress: () {
-          setState(() {
-            _isShowBottomDel = true;
-          });
-        },
-        onPanStart: (detail) {
-          setState(() {
-            _lastStartOffset = detail.globalPosition;
-          });
-        },
-        onPanUpdate: (detail) {
-          if (_isShowBottomDel) {
+    return Center(
+      child: Transform.translate(
+        offset: _moveOffset,
+        child: GestureDetector(
+          // onLongPress: () {
+          //   setState(() {
+          //     _isShowBottomDel = true;
+          //   });
+          // },
+          onPanStart: (detail) {
             setState(() {
-              if ((detail.globalPosition - _lastStartOffset).dx > 0 &&
-                  (detail.globalPosition - _lastStartOffset).dy > 0) {
-                print(
-                    "点的位置----${detail.globalPosition - _lastStartOffset}---屏幕宽---${MediaQuery.of(context).size.width}---控件宽度---${textKey.currentContext?.size?.width}");
-              }
-              _moveOffset =
-                  detail.globalPosition - _lastStartOffset + _idleOffset;
+              _isShowBottomDel = true;
+              _lastStartOffset = detail.globalPosition;
             });
-          }
-        },
-        onPanEnd: (detail) {
-          setState(() {
-            _idleOffset = _moveOffset * 1;
-            _isShowBottomDel = false;
-          });
-        },
-        child: Container(
-          decoration: _isShowBottomDel
-              ? BoxDecoration(
-                  border: Border.all(
-                    width: 4,
-                    color: Colors.blue,
-                  ),
-                )
-              : null,
-          child: Text(
-            _editText,
-            key: textKey,
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.white,
+          },
+          onPanUpdate: (detail) {
+            if (_isShowBottomDel) {
+              setState(() {
+                if ((detail.globalPosition - _lastStartOffset).dx > 0 &&
+                    (detail.globalPosition - _lastStartOffset).dy > 0) {
+                  print(
+                      "点的位置----${detail.globalPosition - _lastStartOffset}---屏幕宽---${MediaQuery.of(context).size.width}---控件宽度---${textKey.currentContext?.size?.width}");
+                }
+                _moveOffset =
+                    detail.globalPosition - _lastStartOffset + _idleOffset;
+              });
+            }
+          },
+          onPanEnd: (detail) {
+            setState(() {
+              _idleOffset = _moveOffset * 1;
+              _isShowBottomDel = false;
+            });
+          },
+          child: Container(
+            // color: Colors.red,
+            decoration: _isShowBottomDel
+                ? BoxDecoration(
+                    border: Border.all(
+                      width: 4,
+                      color: Colors.blue,
+                    ),
+                  )
+                : null,
+            child: Text(
+              _editText,
+              key: textKey,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+              ),
             ),
           ),
         ),

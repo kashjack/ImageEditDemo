@@ -4,7 +4,7 @@
  * @Author: kashjack
  * @Date: 2022-11-01 09:31:38
  * @LastEditors: kashjack kashjack@163.com
- * @LastEditTime: 2022-11-01 13:17:06
+ * @LastEditTime: 2022-11-01 16:52:40
  */
 
 import 'dart:io';
@@ -190,10 +190,10 @@ class _HomePageState extends BaseWidgetState<HomePage> {
     Navigator.pop(context);
     var imagePicker = ImagePicker();
     //根据状态标识决定打开相机还是相册
-    XFile? image = await imagePicker.pickImage(
+    final image = await imagePicker.getImage(
         source: state ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
-      this.push(EditImagePage(image));
+      this.push(EditImagePage(File(image.path)));
     }
   }
 

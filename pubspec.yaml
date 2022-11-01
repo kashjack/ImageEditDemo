@@ -61,7 +61,7 @@ dependencies:
   flutter_staggered_grid_view:
 
   #图片选择
-  image_picker:
+  image_picker: 0.7.4
 
   #版本号
   package_info:

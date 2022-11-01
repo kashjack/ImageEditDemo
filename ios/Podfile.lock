@@ -3,7 +3,7 @@ PODS:
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
-  - image_picker_ios (0.0.1):
+  - image_picker (0.0.1):
     - Flutter
   - integration_test (0.0.1):
     - Flutter
@@ -16,7 +16,7 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
-  - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
@@ -30,8 +30,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
-  image_picker_ios:
-    :path: ".symlinks/plugins/image_picker_ios/ios"
+  image_picker:
+    :path: ".symlinks/plugins/image_picker/ios"
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
   package_info:
@@ -42,7 +42,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
-  image_picker_ios: b786a5dcf033a8336a657191401bfdf12017dabb
+  image_picker: 50e7c7ff960e5f58faa4d1f4af84a771c671bc4a
   integration_test: a1e7d09bd98eca2fc37aefd79d4f41ad37bdbbe5
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
